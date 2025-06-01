@@ -530,7 +530,7 @@ def load():
 def chess_news():
     from openai import OpenAI
 
-    YOUR_API_KEY = "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"
+    YOUR_API_KEY = "your-perplexity-api-key"
 
     messages = [
         {
