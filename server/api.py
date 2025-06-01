@@ -5,7 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    YOUR_API_KEY = "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"
+    YOUR_API_KEY = "your-perplexity-api-key"
 
     # messages = [
     #     {
