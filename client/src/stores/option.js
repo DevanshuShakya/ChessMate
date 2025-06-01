@@ -54,8 +54,6 @@ export const useOptionStore = defineStore('option', () => {
         username: userStore.user.username
       });
 
-      print(data)
-
       // If player is black, flip the board
       if (data.color === 'black') {
         gameStore.boardAPI.toggleOrientation();
