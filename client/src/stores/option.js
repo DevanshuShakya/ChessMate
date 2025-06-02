@@ -54,6 +54,7 @@ export const useOptionStore = defineStore('option', () => {
         username: userStore.user.username
       });
 
+      gameStore.boardAPI.resetBoard();
       // If player is black, flip the board
       if (data.color === 'black') {
         gameStore.boardAPI.toggleOrientation();
@@ -80,14 +81,16 @@ export const useOptionStore = defineStore('option', () => {
 
     socket.on('game_over', (data) => {
       console.log('Game over:', data);
-      const mymodal = new bootstrap.Modal(document.getElementById('myModal'));
+      // const mymodal = new bootstrap.Modal(document.getElementById('myModal'));
       gameStore.winner = data.winner;
       isSuccess.value = data.winner === userStore.user.username;
-      mymodal.show();
+      console.log(gameStore.winner)
+      // mymodal.show();
 
       // Reset game state
       gameStarted.value = false;
       currentOpponent.value = null;
+      isWaiting.value = false;
     });
 
     // Start finding a game

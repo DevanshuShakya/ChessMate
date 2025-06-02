@@ -194,6 +194,8 @@ function handleResign() {
             room_id: optionStore.currentRoomId,
             username: userStore.user.username
         });
+        const mymodal = new bootstrap.Modal('#myModal')
+        mymodal.show()
     }
 }
 

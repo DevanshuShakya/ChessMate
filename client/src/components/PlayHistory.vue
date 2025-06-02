@@ -4,11 +4,13 @@ import { useOptionStore } from '@/stores/option.js';
 import { watch, onMounted, ref, onUpdated, reactive } from 'vue'
 import axios from 'axios'
 import { useUserStore } from '@/stores/user.js';
+import socket from '@/plugins/socket';
 
 const gameStore = useGameStore();
 const optionStore = useOptionStore();
 const userStore = useUserStore();
 const preContainer = ref(null); // Ref for the pre element
+let playerStatus = ref('')
 
 function toggleColor(color) {
     if (color === 'b') {
@@ -82,6 +84,7 @@ function handleResign() {
             username: userStore.user.username
         });
     }
+
 }
 
 </script>
@@ -112,7 +115,13 @@ function handleResign() {
             <div class="modal-content warning-modal">
                 <div class="modal-header border-0">
                     <h5 class="modal-title" id="warningModalLabel">
-                        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                        <i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red"
+                                class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>
+                        </i>
                         Warning
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
@@ -125,10 +134,51 @@ function handleResign() {
                     <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
                         Cancel
                     </button>
+
+
+                  
                     <button v-on:click="handleReset()" type="button" class="btn btn-warning"
                         data-bs-dismiss="modal">
                         Proceed
                     </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="resignWarning" tabindex="-1" aria-labelledby="warningModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content warning-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="warningModalLabel">
+                        <i>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="red"
+                                class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                            </svg>
+                        </i>
+                        Warning
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    You will lose the match. Do you still want to proceed?
+                </div>
+                <div class="modal-footer justify-content-center border-0">
+                    <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+
+                    <button v-on:click="handleResign()" type="button" class="btn btn-warning"
+                        data-bs-dismiss="modal">
+                        Resign
+                    </button>
+                
+
                 </div>
             </div>
         </div>
@@ -176,8 +226,8 @@ function handleResign() {
     <div class="container" style="background-color: #454545; padding: 10px;">
         <div class="row">
             <div v-if="optionStore.mode == 'online'" class="col-sm-3" style="height: 54px;">
-                <button @click="handleResign()" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
-                    style="height: 50px;width: 100%;border-radius: 0px;">Resign</button>
+                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#resignWarning"
+                    style="height: 50px;width: 100%;border-radius: 0px;">Resign{{ status }}</button>
             </div>
             <div v-else class="col-sm-3" style="height: 54px;">
                 <button v-if="history==null" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop"
