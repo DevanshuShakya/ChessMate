@@ -532,44 +532,70 @@ def chess_news():
 
     YOUR_API_KEY = os.getenv('PERPLEXITY_API_KEY')
 
-    messages = [
-        {
-            "role": "system",
-            "content": (
-                "You have to collect the recent news about chess and output it into JSON format with summarized version of news in which each news contains a title and the summary"
-            ),
-        },
-        {   
-            "role": "user",
-            "content": (
-                "What are the recent news in the world of chess."
-            ),
-        },
-    ]
+    from newsapi import NewsApiClient
 
-    client = OpenAI(api_key=YOUR_API_KEY, base_url="https://api.perplexity.ai")
+    # Init
+    newsapi = NewsApiClient(api_key=os.getenv('NEWSAPI'))
 
-    # chat completion without streaming
-    response = client.chat.completions.create(
-        model="sonar-pro",
-        messages=messages,
-    )
-    print(response)
+    # /v2/top-headlines
+    top_headlines = newsapi.get_top_headlines()
 
-    # # chat completion with streaming
-    # response_stream = client.chat.completions.create(
-    #     model="sonar-pro",
-    #     messages=messages,
-    #     stream=True,
-    # )
-    # for response in response_stream:
-    #     print(response)
+    # /v2/everything
+    # all_articles = newsapi.get_everything(q='bitcoin',
+    #                                     sources='bbc-news,the-verge',
+    #                                     domains='bbc.co.uk,techcrunch.com',
+    #                                     from_param='2017-12-01',
+    #                                     to='2017-12-12',
+    #                                     language='en',
+    #                                     sort_by='relevancy',
+    #                                     page=2)
     
 
 
-    # after receiving the response
-    data = response.model_dump()   # or response.dict() in older versions
-    return jsonify(data)
+    # /v2/top-headlines/sources
+    # sources = newsapi.get_sources()
+
+    return top_headlines
+
+
+    # messages = [
+    #     {
+    #         "role": "system",
+    #         "content": (
+    #             "You have to collect the recent news about chess and output it into JSON format with summarized version of news in which each news contains a title, the summary, source of information and how old the information is"
+    #         ),
+    #     },
+    #     {   
+    #         "role": "user",
+    #         "content": (
+    #             "What are the recent news in the world of chess."
+    #         ),
+    #     },
+    # ]
+
+    # client = OpenAI(api_key=YOUR_API_KEY, base_url="https://api.perplexity.ai")
+
+    # # chat completion without streaming
+    # response = client.chat.completions.create(
+    #     model="sonar-pro",
+    #     messages=messages,
+    # )
+    # print(response)
+
+    # # # chat completion with streaming
+    # # response_stream = client.chat.completions.create(
+    # #     model="sonar-pro",
+    # #     messages=messages,
+    # #     stream=True,
+    # # )
+    # # for response in response_stream:
+    # #     print(response)
+    
+
+
+    # # after receiving the response
+    # data = response.model_dump()   # or response.dict() in older versions
+    # return jsonify(data)
 
 
 
