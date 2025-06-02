@@ -538,7 +538,7 @@ def chess_news():
     newsapi = NewsApiClient(api_key=os.getenv('NEWSAPI'))
 
     # /v2/top-headlines
-    top_headlines = newsapi.get_top_headlines()
+    top_headlines = newsapi.get_everything(q='chess')
 
     # /v2/everything
     # all_articles = newsapi.get_everything(q='bitcoin',
