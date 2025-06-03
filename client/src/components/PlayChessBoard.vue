@@ -23,7 +23,6 @@ const userStore = useUserStore()
 
 // const roomId = 'roomhaina'
 
-
 // Initialize the worker
 let worker;
 let globalSUM = 0;
@@ -45,7 +44,7 @@ onMounted(() => {
         }
     };
 
-    
+
 });
 
 // Send a message to the worker to make a move
@@ -61,9 +60,9 @@ onUnmounted(() => {
 
     if (optionStore.option == 'casual') {
         if (currentRoomId.value) {
-            socket.emit('leave_game', { 
-                room_id: currentRoomId.value, 
-                username: userStore.user.username 
+            socket.emit('leave_game', {
+                room_id: currentRoomId.value,
+                username: userStore.user.username
             });
         }
         socket.off('game_found');
@@ -217,12 +216,41 @@ function handleCheckmate(isMated) {
     <div>
 
         <!-- Modal -->
-        <div class="modal fade" id="myModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content" :class="{ 'bg-success': isSuccess, 'bg-danger': !isSuccess }">
+        <div class="modal fade" id="postGameStatusModal" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-sm">
+
+                <div class="modal-content" style="background-color: transparent; border:0;">
+
+                <div v-if="optionStore.mode === 'online'">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">
+                            Game Over
+                        </h1>
+                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div v-if="gameStore.winner === userStore.user.username" class="modal-body">
+                            You won the game.
+                        </div>
+                        <div v-else class="modal-body">
+                            {{ gameStore.winner }} won the game.
+                        </div>
+
+                        <div style="text-align: end;">
+                            <button style="margin: 10px; border-radius: 0%;" type="button" class="btn btn-outline-light">New Game</button>
+
+                            <button style="margin: 10px; border-radius: 0%;" type="button" class="btn btn-outline-light">Home</button>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div v-else :class="{ 'bg-success': isSuccess, 'bg-danger': !isSuccess }">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Game Over</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <img style="height: 50px; width: 50px;" :src="gameStore.getPieceImage('k', gameStore.winner[0])"
@@ -230,6 +258,9 @@ function handleCheckmate(isMated) {
                     </div>
 
                 </div>
+
+                </div>
+
             </div>
         </div>
 
@@ -242,7 +273,7 @@ function handleCheckmate(isMated) {
         </div> -->
 
         <!-- Captured Pieces -->
-        <div v-if="optionStore.playerColor=='black'" class="captured-pieces">
+        <div v-if="optionStore.playerColor == 'black'" class="captured-pieces">
             <div v-for="(piece, index) in lost_black" :key="index" :class="['piece']" :style="getPieceStyle(index)">
                 <img :src="gameStore.getPieceImage(piece, 'b')" style="height: 30px;" :alt="piece.type" />
             </div>
@@ -303,17 +334,12 @@ function handleCheckmate(isMated) {
             style="max-width: 565px;" @move="handleMove" :player-color="playerColor" @checkmate="handleCheckmate"
             @board-created="handleBoardCreated" />
         <TheChessboard v-if="optionStore.option === 'casual'" :board-config="boardConfig" style="max-width: 565px;"
-            @move="handleMove" @checkmate="handleCheckmate" :player-color="optionStore.playerColor" @board-created="handleBoardCreated" />
+            @move="handleMove" @checkmate="handleCheckmate" :player-color="optionStore.playerColor"
+            @board-created="handleBoardCreated" />
 
-        <!-- Resign Button for Casual Mode -->
-        <div v-if="optionStore.option === 'casual' && optionStore.gameStarted" class="text-center mt-3">
-            <button @click="handleResign" class="btn btn-danger">
-                Resign Game
-            </button>
-        </div>
 
         <!-- Your Captured Pieces -->
-        <div v-if="optionStore.playerColor=='black'" class="captured-pieces">
+        <div v-if="optionStore.playerColor == 'black'" class="captured-pieces">
             <div v-for="(piece, index) in lost_white" :key="index" :class="['piece']" :style="getPieceStyle(index)">
                 <img :src="gameStore.getPieceImage(piece, 'w')" style="height: 30px;" :alt="piece.type" />
             </div>
@@ -354,4 +380,5 @@ function handleCheckmate(isMated) {
     /* Adjust piece size */
 
 }
+
 </style>

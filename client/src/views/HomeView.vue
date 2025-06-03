@@ -74,7 +74,7 @@ const formatDate = (dateString) => {
 
         <div style="margin: 10px;">
 
-          <h1 class="dancing-script-brand" style="color: #283b69;margin: 0%; font-size: 70px;">
+          <h1 class="dancing-script-brand" style="color: #283b69;margin: 0%; font-size: 65px;">
             {{ userStore.user.username }}
             <span style="font-size: large;color: #283b69; font-weight: 600;">
               {{ userStore.user.rating }}

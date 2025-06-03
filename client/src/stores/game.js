@@ -8,6 +8,8 @@ import { defineStore } from 'pinia'
 // const winner = ref("black")
 export const move = ref(null)
 
+export const isModalOpen = ref(false)
+
 export const useGameStore = defineStore('game', () => {
     let boardAPI
     // const moves = reactive([]);

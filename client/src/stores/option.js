@@ -60,7 +60,7 @@ export const useOptionStore = defineStore('option', () => {
         gameStore.boardAPI.toggleOrientation();
       }
 
-      
+
     });
 
     socket.on('game_state', (gameState) => {
@@ -81,16 +81,30 @@ export const useOptionStore = defineStore('option', () => {
 
     socket.on('game_over', (data) => {
       console.log('Game over:', data);
-      // const mymodal = new bootstrap.Modal(document.getElementById('myModal'));
+      const mymodal = new bootstrap.Modal(document.getElementById('postGameStatusModal'));
       gameStore.winner = data.winner;
       isSuccess.value = data.winner === userStore.user.username;
       console.log(gameStore.winner)
-      // mymodal.show();
+      // mymodal.on('show.bs.modal', function (e) {
+      //   $('body').addClass("example-open");
+      // }).on('hide.bs.modal', function (e) {
+      //   $('body').removeClass("example-open");
+      // })
+      // mymodal.addEventListener('show.bs.modal', event => {
+      //   document.body.classList.add('example-open');
+      // })
+      // mymodal.addEventListener('hidden.bs.modal', event => {
+      //   document.body.classList.remove('example-open');
+      // })
+      
+      
+      mymodal.show();
 
       // Reset game state
       gameStarted.value = false;
       currentOpponent.value = null;
       isWaiting.value = false;
+      option.value = null;
     });
 
     // Start finding a game
@@ -99,7 +113,7 @@ export const useOptionStore = defineStore('option', () => {
       username: userStore.user.username
     });
   }
-  return { mode, option, CasualGamePlay,isSuccess, playerColor, isWaiting, gameStarted, currentOpponent, currentRoomId }
+  return { mode, option, CasualGamePlay, isSuccess, playerColor, isWaiting, gameStarted, currentOpponent, currentRoomId }
 })
 
 
