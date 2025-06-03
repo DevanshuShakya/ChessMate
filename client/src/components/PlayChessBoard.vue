@@ -200,7 +200,7 @@ function handleResign() {
 
 function handleCheckmate(isMated) {
     // Create a Bootstrap modal instance
-    const mymodal = new bootstrap.Modal('#myModal');
+    const mymodal = new bootstrap.Modal('#postGameStatusModal');
     gameStore.winner = toggleColor(isMated)
     console.log(gameStore.winner)
     if (gameStore.winner == 'black') {
@@ -208,6 +208,16 @@ function handleCheckmate(isMated) {
     }
     // Show the modal
     mymodal.show();
+}
+
+
+function handleReset() {
+    gameStore.move = null;
+    gameStore.boardAPI.resetBoard();
+    console.log(optionStore.option, optionStore.mode)
+    if (optionStore.option == 'casual') {
+        optionStore.CasualGamePlay();
+    }
 }
 
 
@@ -222,42 +232,54 @@ function handleCheckmate(isMated) {
 
                 <div class="modal-content" style="background-color: transparent; border:0;">
 
-                <div v-if="optionStore.mode === 'online'">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">
-                            Game Over
-                        </h1>
-                        <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal"
-                            aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div v-if="gameStore.winner === userStore.user.username" class="modal-body">
-                            You won the game.
+                    <div v-if="optionStore.mode === 'online'">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">
+                                Game Over
+                            </h1>
+                            <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
-                        <div v-else class="modal-body">
-                            {{ gameStore.winner }} won the game.
+                        <div class="modal-body">
+                            <div v-if="gameStore.winner === userStore.user.username" class="modal-body">
+                                You won the game.
+                            </div>
+                            <div v-else class="modal-body">
+                                {{ gameStore.winner }} won the game.
+                            </div>
+
+                            <div style="text-align: end;">
+                                <button v-on:click="handleReset()" style="margin: 10px; border-radius: 0%;" type="button" data-bs-dismiss="modal"
+                                    class="btn btn-outline-light">New Game</button>
+
+                                <button style="margin: 10px; border-radius: 0%;" type="button"
+                                    class="btn btn-outline-light">Home</button>
+                            </div>
+
                         </div>
 
-                        <div style="text-align: end;">
-                            <button style="margin: 10px; border-radius: 0%;" type="button" class="btn btn-outline-light">New Game</button>
+                    </div>
 
-                            <button style="margin: 10px; border-radius: 0%;" type="button" class="btn btn-outline-light">Home</button>
+                    <div v-else>
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Game Over</h1>
+                             <button type="button" class="btn-close-white btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <img style="height: 50px; width: 50px;"
+                                :src="gameStore.getPieceImage('k', gameStore.winner[0])" alt=""> won the game.
+
+                                <div style="text-align: end;">
+                                <button v-on:click="handleReset()" style="margin: 10px; border-radius: 0%;" type="button" data-bs-dismiss="modal"
+                                    class="btn btn-outline-light">New Game</button>
+
+                                <!-- <button style="margin: 10px; border-radius: 0%;" type="button"
+                                    class="btn btn-outline-light">Home</button> -->
+                            </div>
                         </div>
 
                     </div>
-
-                </div>
-
-                <div v-else :class="{ 'bg-success': isSuccess, 'bg-danger': !isSuccess }">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Game Over</h1>
-                    </div>
-                    <div class="modal-body">
-                        <img style="height: 50px; width: 50px;" :src="gameStore.getPieceImage('k', gameStore.winner[0])"
-                            alt=""> won the game.
-                    </div>
-
-                </div>
 
                 </div>
 
@@ -380,5 +402,4 @@ function handleCheckmate(isMated) {
     /* Adjust piece size */
 
 }
-
 </style>

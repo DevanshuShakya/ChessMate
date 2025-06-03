@@ -27,6 +27,29 @@ onMounted(() => {
     getNews()
 });
 
+function getElapsedTimeSince(dateString) {
+  const inputDate = new Date(dateString);
+  const now = new Date();
+
+  // Calculate the difference in milliseconds
+  let diffMs = now - inputDate;
+
+  // Calculate days, hours, minutes
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+
+  diffMs -= days * (1000 * 60 * 60 * 24);
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+
+  diffMs -= hours * (1000 * 60 * 60);
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+
+  return 'just now';
+}
+
+
 
 
 </script>
@@ -58,7 +81,7 @@ onMounted(() => {
                                 <small> - {{ n['author'] }}</small>
                             </div>
                             <div class="col-2">
-                                <small>{{ n["publishedAt"] }}</small>
+                                <small>{{ getElapsedTimeSince(n["publishedAt"]) }}</small>
                             </div>
                         </div>
                         <!-- </div> -->

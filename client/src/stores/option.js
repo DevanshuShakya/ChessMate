@@ -104,7 +104,7 @@ export const useOptionStore = defineStore('option', () => {
       gameStarted.value = false;
       currentOpponent.value = null;
       isWaiting.value = false;
-      option.value = null;
+      // option.value = null;
     });
 
     // Start finding a game
