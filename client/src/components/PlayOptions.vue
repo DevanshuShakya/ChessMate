@@ -283,7 +283,7 @@ function handleReset() {
 
 </template>
 
-<style scoped>
+<style>
 .play-options button {
     display: block;
     margin: 5px;
@@ -371,5 +371,10 @@ pre {
     color: #ff6b6b;
     font-size: 0.8em;
     margin-top: 5px;
+}
+
+/* Increase backdrop opacity for postGameStatusModal */
+:deep(.modal-backdrop.show[data-bs-target="#postGameStatusModal"]) {
+    opacity: 0.8 !important;
 }
 </style>
